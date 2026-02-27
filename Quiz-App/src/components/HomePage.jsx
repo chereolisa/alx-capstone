@@ -13,7 +13,7 @@ const HomePage = () => {
       <img src="logo" />
       <h1>QUIZZIE</h1>
       <p>Test your knowledge across different topics with a quick quiz!</p>
-      <Link to="./Preferences">Start Quiz</Link>
+      <Link to="/quiz">Take a Quiz</Link>
     </div>
   );
 };

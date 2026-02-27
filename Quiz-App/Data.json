@@ -1,0 +1,15 @@
+[
+  {
+    "id": 1,
+    "question": "What is the capital of France?",
+    "options": ["Paris", "Madrid", "Abuja", "Berlin"],
+    "answer": "Paris"
+  },
+
+  {
+    "id": 2,
+    "question": "What is my name?",
+    "options": ["Jackson", "Justice", "Austin", "Justin"],
+    "answer": "Justin"
+  }
+]
