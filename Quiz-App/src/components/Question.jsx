@@ -1,12 +1,39 @@
 import { useState, useEffect, useRef } from "react";
+import { useLocation, Link } from "react-router-dom";
+import Loader from "./Loader";
 import he from "he";
 
 function Question() {
-  const [questions, setQuestions] = useState([]);
+  const { state } = useLocation();
+
+  if (!state) {
+    return (
+      <div className="flex flex-col ml-auto mr-auto mt-8 pt-4 pb-4 pl-2 pr-2 justify-center items-center border rounded-lg bg-gray-100 w-1/3 h-auto">
+        <h2 className="text-3xl font-itim text-center">
+          No quiz settings found
+        </h2>
+        <p className="text-2xl font-itim text-center">
+          Please go back and select preferences.
+        </p>
+        <Link
+          to="/preferences"
+          className="bg-[#4E062E] hover:bg-[#85044b] hover:text-[#ffffff] px-8 py-4 mt-4 rounded-md font-itim font-normal text-[#ffffff] text-2xl"
+        >
+          Choose Topic
+        </Link>
+      </div>
+    );
+  }
+
+  const { topic, difficulty, amount } = state;
+
+  const apiUrl = `https://opentdb.com/api.php?amount=${amount}&category=${topic}&difficulty=${difficulty}&type=multiple&encode=base64`;
+  console.log(apiUrl);
+
+  const [shuffledQuestions, setShuffledQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState({});
-  const [showScore, setShowScore] = useState(false);
   const hasFetched = useRef(false);
 
   useEffect(() => {
@@ -15,9 +42,7 @@ function Question() {
 
     setLoading(true);
 
-    fetch(
-      "https://opentdb.com/api.php?amount=10&category=15&difficulty=easy&type=multiple&encode=base64",
-    )
+    fetch(apiUrl)
       .then((res) => res.json())
       .then((data) => {
         if (data.response_code === 0) {
@@ -29,74 +54,91 @@ function Question() {
               he.decode(atob(a)),
             ),
           }));
-          setQuestions(decoded);
+
+          // Shuffle options **once** for each question
+          const questionsWithShuffledOptions = decoded.map((q) => ({
+            ...q,
+            shuffledOptions: [...q.incorrect_answers, q.correct_answer].sort(
+              () => Math.random() - 0.5,
+            ),
+          }));
+
+          setShuffledQuestions(questionsWithShuffledOptions);
         } else {
           console.warn("API returned non-success code:", data.response_code);
-          setQuestions([]);
+          setShuffledQuestions([]);
         }
       })
       .catch((error) => {
         console.error("Fetch failed:", error);
-        setQuestions([]);
+        setShuffledQuestions([]);
       })
       .finally(() => {
         setLoading(false);
       });
   }, []);
 
-  if (loading) return <p>Loading quiz...</p>;
-
-  if (questions.length === 0) {
-    return <p>No questions found. Please try again later.</p>;
-  }
-
-  if (showScore) {
-    const score = Object.values(userAnswers).filter(
-      (answer, idx) => answer === questions[idx].correct_answer,
-    ).length;
-
+  if (loading)
     return (
-      <div style={{ textAlign: "center", padding: "40px" }}>
-        <h2>Quiz Complete!</h2>
-        <p style={{ fontSize: "1.4em", margin: "20px 0" }}>
-          Your score:{" "}
-          <strong>
-            {score} / {questions.length}
-          </strong>
+      <div className="w-full h-full flex justify-center items-center pt-6">
+        <div className="flex flex-col ml-auto mr-auto mt-8 px-3 py-4 justify-center items-center border rounded-lg bg-gray-100 w-1/4 h-auto">
+          <p className="text-3xl font-itim text-center">Loading Questions</p>
+          <Loader />
+        </div>
+      </div>
+    );
+
+  if (shuffledQuestions.length === 0) {
+    return (
+      <div className="flex flex-col ml-auto mr-auto mt-8 px-3 py-4 justify-center items-center border rounded-lg bg-gray-100 w-1/3 h-auto">
+        <p className="text-3xl font-itim text-center">
+          No questions found. Please try again later.
         </p>
-        <button
-          onClick={() => {
-            setCurrentQuestionIndex(0);
-            setUserAnswers({});
-            setShowScore(false);
-          }}
-          style={{
-            padding: "12px 24px",
-            fontSize: "1.1em",
-            cursor: "pointer",
-          }}
-        >
-          Play Again
-        </button>
       </div>
     );
   }
 
-  // Current question only
-  const currentQuestion = questions[currentQuestionIndex];
-  const allOptions = [
-    ...currentQuestion.incorrect_answers,
-    currentQuestion.correct_answer,
-  ].sort(() => Math.random() - 0.5);
+  const score = Object.values(userAnswers).filter(
+    (answer, idx) => answer === shuffledQuestions[idx]?.correct_answer,
+  ).length;
+  const questionLength = shuffledQuestions.length;
+
+  const current = currentQuestionIndex + 1;
+  const total = shuffledQuestions.length;
+  const progress = (current / total) * 100;
+  const currentQuestion = shuffledQuestions[currentQuestionIndex];
+
+  // Safety guard in case index is somehow invalid
+  if (!currentQuestion) {
+    return <p>Error: Question not found. Please restart the quiz.</p>;
+  }
 
   const selectedAnswer = userAnswers[currentQuestionIndex];
 
   return (
     <div style={{ maxWidth: "700px", margin: "0 auto", padding: "20px" }}>
-      <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
-        Question {currentQuestionIndex + 1} of {questions.length}
+      <h2 className="text-2xl font-extralight font-lobster text-center mb-3">
+        Question {currentQuestionIndex + 1} of {shuffledQuestions.length}
       </h2>
-
+      <div
+        style={{
+          height: "8px",
+          width: "100%",
+          backgroundColor: "#e0e0e0",
+          borderRadius: "4px",
+          overflow: "hidden",
+          marginBottom: "1.5rem",
+        }}
+      >
+        <div
+          style={{
+            height: "100%",
+            width: `${progress}%`,
+            backgroundColor: "#4E062E",
+            transition: "width 0.4s ease",
+          }}
+        />
+      </div>
       <div
         style={{
           background: "#f9f9f9",
@@ -106,89 +148,100 @@ function Question() {
           marginBottom: "30px",
         }}
       >
-        <h3 style={{ marginTop: 0 }}>{currentQuestion.question}</h3>
+        <h3 className="text-2xl font-extralight font-itim text-center">
+          {currentQuestion.question}
+        </h3>
 
         <div className="options" style={{ marginTop: "25px" }}>
-          {allOptions.map((option, index) => (
-            <label
-              key={index}
-              style={{
-                display: "block",
-                margin: "12px 0",
-                padding: "14px 18px",
-                border: "2px solid",
-                borderColor: selectedAnswer === option ? "#4caf50" : "#ddd",
-                borderRadius: "8px",
-                background: selectedAnswer === option ? "#e8f5e9" : "white",
-                cursor: "pointer",
-                transition: "all 0.2s",
-              }}
-            >
-              <input
-                type="radio"
+          {currentQuestion.shuffledOptions.map((option, index) => (
+            <div key={index} style={{}}>
+              <button
+                type="button"
                 name={`question-${currentQuestionIndex}`}
                 value={option}
                 checked={selectedAnswer === option}
-                onChange={() =>
+                onClick={() =>
                   setUserAnswers((prev) => ({
                     ...prev,
                     [currentQuestionIndex]: option,
                   }))
                 }
-                style={{ marginRight: "12px", transform: "scale(1.3)" }}
-              />
-              {option}
-            </label>
+                style={{
+                  width: "100%",
+                  textAlign: "left",
+                  display: "block",
+                  margin: "12px 0",
+                  padding: "14px 18px",
+                  border: "2px solid",
+                  borderColor: selectedAnswer === option ? "#4E062E" : "#ddd",
+                  borderRadius: "8px",
+                  background: selectedAnswer === option ? "#e8f5e9" : "white",
+                  cursor: "pointer",
+                  transition: "all 0.2s",
+                }}
+                className="text-lg font-extralight font-itim text-center"
+              >
+                {option}
+              </button>
+            </div>
           ))}
         </div>
       </div>
 
-      <div style={{ textAlign: "center", marginTop: "30px" }}>
+      <div className="flex gap-8 justify-between">
         {currentQuestionIndex > 0 && (
           <button
             onClick={() => setCurrentQuestionIndex((prev) => prev - 1)}
-            style={{
-              padding: "10px 20px",
-              marginRight: "15px",
-              fontSize: "1em",
-            }}
+            className="bg-[#4E062E] hover:bg-[#85044b] hover:text-[#ffffff] px-8 py-4 rounded-md font-itim font-normal text-[#ffffff] text-2xl"
           >
             Previous
           </button>
         )}
 
-        {currentQuestionIndex < questions.length - 1 ? (
+        {currentQuestionIndex < shuffledQuestions.length - 1 ? (
           <button
             onClick={() => setCurrentQuestionIndex((prev) => prev + 1)}
             disabled={!selectedAnswer}
-            style={{
-              padding: "10px 28px",
-              fontSize: "1em",
-              background: selectedAnswer ? "#1976d2" : "#ccc",
-              color: "white",
-              border: "none",
-              borderRadius: "6px",
-              cursor: selectedAnswer ? "pointer" : "not-allowed",
-            }}
+            // style={{
+            //   padding: "10px 28px",
+            //   fontSize: "1em",
+            //   background: selectedAnswer ? "#1976d2" : "#ccc",
+            //   color: "white",
+            //   border: "none",
+            //   borderRadius: "6px",
+            //   cursor: selectedAnswer ? "pointer" : "not-allowed",
+            // }}
+            className={`
+    px-8 py-4 rounded-md 
+    font-itim font-normal text-[#ffffff] text-2xl 
+    transition-colors duration-200
+    ${
+      selectedAnswer
+        ? "bg-[#4E062E] hover:bg-[#85044b] cursor-pointer"
+        : "bg-[#a0a0a0] cursor-not-allowed opacity-60"
+    }
+  `}
           >
             Next
           </button>
         ) : (
-          <button
-            onClick={() => setShowScore(true)}
+          <Link
+            to="/result"
+            state={{ score, questionLength, topic, difficulty, amount }}
             disabled={!selectedAnswer}
-            style={{
-              padding: "10px 28px",
-              fontSize: "1em",
-              background: selectedAnswer ? "#4caf50" : "#ccc",
-              color: "white",
-              border: "none",
-              borderRadius: "6px",
-              cursor: selectedAnswer ? "pointer" : "not-allowed",
-            }}
+            className={`
+    px-8 py-4 rounded-md 
+    font-itim font-normal text-[#ffffff] text-2xl 
+    transition-colors duration-200
+    ${
+      selectedAnswer
+        ? "bg-[#4E062E] hover:bg-[#85044b] cursor-pointer"
+        : "bg-[#a0a0a0] cursor-not-allowed opacity-60"
+    }
+  `}
           >
             Finish Quiz
-          </button>
+          </Link>
         )}
       </div>
     </div>

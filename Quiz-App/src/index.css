@@ -1,0 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Itim:wght@400;500;700&family=Lemon:wght@400;500;700&family=Lobster&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif; /* body text */
+  --font-roboto: "Roboto", system-ui, sans-serif;
+  --font-lobster: "Lobster", cursive;
+  --font-lemon: "Lemon", cursive;
+  --font-itim: "Itim", cursive;
+}
