@@ -192,7 +192,7 @@ function Question() {
         {currentQuestionIndex > 0 && (
           <button
             onClick={() => setCurrentQuestionIndex((prev) => prev - 1)}
-            className="bg-[#4E062E] hover:bg-[#85044b] hover:text-[#ffffff] px-8 py-4 rounded-md font-itim font-normal text-[#ffffff] text-2xl"
+            className="bg-[#4E062E] hover:bg-[#85044b] hover:text-[#ffffff] px-8 py-4 rounded-md font-itim font-normal text-[#ffffff] text-xl sm:text-2xl"
           >
             Previous
           </button>
@@ -202,22 +202,13 @@ function Question() {
           <button
             onClick={() => setCurrentQuestionIndex((prev) => prev + 1)}
             disabled={!selectedAnswer}
-            // style={{
-            //   padding: "10px 28px",
-            //   fontSize: "1em",
-            //   background: selectedAnswer ? "#1976d2" : "#ccc",
-            //   color: "white",
-            //   border: "none",
-            //   borderRadius: "6px",
-            //   cursor: selectedAnswer ? "pointer" : "not-allowed",
-            // }}
             className={`
     px-8 py-4 rounded-md 
-    font-itim font-normal text-[#ffffff] text-2xl 
+    font-itim font-normal text-[#ffffff] text-xl sm:text-2xl 
     transition-colors duration-200
     ${
       selectedAnswer
-        ? "bg-[#4E062E] hover:bg-[#85044b] cursor-pointer"
+        ? "bg-[#4E062E] hover:bg-[#85044b] cursor-pointer "
         : "bg-[#a0a0a0] cursor-not-allowed opacity-60"
     }
   `}
@@ -231,7 +222,7 @@ function Question() {
             disabled={!selectedAnswer}
             className={`
     px-8 py-4 rounded-md 
-    font-itim font-normal text-[#ffffff] text-2xl 
+    font-itim font-normal text-[#ffffff] text-xl sm:text-2xl 
     transition-colors duration-200
     ${
       selectedAnswer

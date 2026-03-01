@@ -11,14 +11,17 @@ function Preferences() {
 
   return (
     <div className="m-6 flex flex-col justify-center items-center">
-      <h2 className="text-center font-lemon text-4xl mb-4">
+      <h2
+        className="text-center font-lemon text-3xl sm:text-4xl md:text-5xl 
+        mb-6 sm:mb-8 md:mb-10"
+      >
         Select your Preferences
       </h2>
 
-      <div className="flex flex-col w-1/2 justify-end ">
+      <div className="flex flex-col w-full sm:w-1/2 justify-end gap-3 ">
         <label
           htmlFor="topic"
-          className="mt-4 mb-1 font-itim font-normal text-2xl"
+          className="mt-4 font-itim font-normal text-xl sm:text-2xl"
         >
           Topic
         </label>
@@ -32,14 +35,14 @@ function Preferences() {
           <option value="">Select a topic</option>
           <option value="19">Mathematics</option>
           <option value="12">Music</option>
-          <option value="18">Computers</option>
+          <option value="18">Computer</option>
           <option value="23">History</option>
           <option value="9">General Knowledge</option>
         </select>
 
         <label
           htmlFor="difficulty"
-          className="mt-4 mb-1 font-itim font-normal text-2xl"
+          className="mt-4 font-itim font-normal text-xl sm:text-2xl"
         >
           Difficulty
         </label>
@@ -58,7 +61,7 @@ function Preferences() {
 
         <label
           htmlFor="amount"
-          className="mt-4 mb-1 font-itim font-normal text-2xl"
+          className="mt-4 font-itim font-normal text-xl sm:text-2xl"
         >
           Number of Questions
         </label>
@@ -87,8 +90,8 @@ function Preferences() {
         state={{ topic, difficulty, amount: Number(amount) }}
         className={`
     px-8 py-4 rounded-md 
-    font-itim font-normal text-[#ffffff] text-2xl 
-    mt-8
+    font-itim font-normal text-[#ffffff] text-xl sm:text-2xl 
+    mt-8 sm:mt-10 md:mt-12
     transition-colors duration-200
     ${
       isReady
