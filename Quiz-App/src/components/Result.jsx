@@ -1,6 +1,6 @@
 import Confetti from "react-confetti";
 import { useLocation, Link } from "react-router-dom";
-import { useEffect } from "react"; // ← added this import
+import { useEffect } from "react";
 
 const Result = () => {
   const { state } = useLocation();
@@ -115,7 +115,7 @@ const Result = () => {
         </div>
       )}
 
-      <div className="flex justify-between gap-3 flex-row sm:flex-col">
+      <div className="flex justify-between gap-3 flex-col sm:flex-row">
         <Link
           to="/quiz"
           state={{ topic, difficulty, amount }}
