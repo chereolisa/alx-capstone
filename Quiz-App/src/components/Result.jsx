@@ -7,11 +7,16 @@ const Result = () => {
 
   if (!state) {
     return (
-      <div className="flex flex-col ml-auto mr-auto mt-8 pt-4 pb-4 pl-2 pr-2 justify-center items-center border rounded-lg bg-gray-100 w-1/3 h-auto">
+      <div className="flex flex-col ml-auto mr-auto mt-8 pt-4 pb-4 pl-2 pr-2 justify-center items-center border rounded-lg bg-gray-100 w-full sm:w-3/4 h-auto">
         <h2 className="text-3xl font-itim text-center">
           Take a quiz to view your result!
         </h2>
-        <Link to="/preferences">Choose Topic</Link>
+        <Link
+          to="/preferences"
+          className="bg-[#4E062E] hover:bg-[#85044b] hover:text-[#ffffff] px-4 py-2 rounded-md font-itim font-normal text-[#ffffff] text-xl sm:text-2xl mt-5"
+        >
+          Choose Topic
+        </Link>
       </div>
     );
   }
@@ -110,7 +115,7 @@ const Result = () => {
         </div>
       )}
 
-      <div className="flex justify-between gap-3">
+      <div className="flex justify-between gap-3 flex-row sm:flex-col">
         <Link
           to="/quiz"
           state={{ topic, difficulty, amount }}
@@ -123,6 +128,12 @@ const Result = () => {
           className="bg-[#4E062E] hover:bg-[#85044b] hover:text-[#ffffff] px-4 py-2 rounded-md font-itim font-normal text-[#ffffff] text-xl sm:text-2xl"
         >
           Select new Topic
+        </Link>
+        <Link
+          to="/"
+          className="bg-[#4E062E] hover:bg-[#85044b] hover:text-[#ffffff] px-4 py-2 rounded-md font-itim font-normal text-[#ffffff] text-xl sm:text-2xl"
+        >
+          Go Back Home
         </Link>
       </div>
     </div>

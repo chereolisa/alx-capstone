@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const HomePage = () => {
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen p-4 sm:p-8 md:p-10 lg:p-12 ">
+    <div className="flex flex-col justify-center items-center min-h-screen p-2 sm:p-4 md:p-6 lg:p-8 ">
       <nav>
         <ul
           className="flex justify-evenly font-itim text-2xl sm:gap-8 

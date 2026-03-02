@@ -1,4 +1,4 @@
-import React from "react";
+import { Link } from "react-router-dom";
 
 const Contact = () => {
   return (
@@ -15,6 +15,7 @@ const Contact = () => {
             drop me an email
           </a>{" "}
           — and I'll get back to you as soon as I can!
+          <br />
         </p>
 
         {/* Optional: quick social links */}
@@ -59,6 +60,10 @@ const Contact = () => {
         <p className="mt-8 text-sm text-gray-500">
           © {new Date().getFullYear()} Justin Ezeh. All rights reserved.
         </p>
+
+        <Link to="/" className="text-indigo-600 mb-8 mt-5 text-sm">
+          <u>Go back home</u>
+        </Link>
       </div>
     </div>
   );

@@ -102,6 +102,10 @@ function Preferences() {
       >
         Start Quiz
       </Link>
+
+      <Link to="/" className="text-indigo-600 mb-8 mt-5 text-md">
+        <u>Back Home</u>
+      </Link>
     </div>
   );
 }

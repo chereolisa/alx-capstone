@@ -8,7 +8,7 @@ function Question() {
 
   if (!state) {
     return (
-      <div className="flex flex-col ml-auto mr-auto mt-8 pt-4 pb-4 pl-2 pr-2 justify-center items-center border rounded-lg bg-gray-100 w-1/3 h-auto">
+      <div className="flex flex-col ml-auto mr-auto mt-8 pt-4 pb-4 pl-2 pr-2 justify-center items-center border rounded-lg bg-gray-100 w-full sm:w-3/4 h-auto">
         <h2 className="text-3xl font-itim text-center">
           No quiz settings found
         </h2>
@@ -81,7 +81,7 @@ function Question() {
   if (loading)
     return (
       <div className="w-full h-full flex justify-center items-center pt-6">
-        <div className="flex flex-col ml-auto mr-auto mt-8 px-3 py-4 justify-center items-center border rounded-lg bg-gray-100 w-1/4 h-auto">
+        <div className="flex flex-col ml-auto mr-auto mt-8 px-3 py-4 justify-center items-center border rounded-lg bg-gray-100 w-full sm:w-3/4 h-auto">
           <p className="text-3xl font-itim text-center">Loading Questions</p>
           <Loader />
         </div>
